@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		A10000000000000000000010 /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
+		A10000000000000000000012 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A10000000000000000000001 /* ActionApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActionApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -33,8 +35,18 @@
 			isa = PBXGroup;
 			children = (
 				A10000000000000000000002 /* ActionApp */,
+				A10000000000000000000011 /* Config */,
 				A10000000000000000000005 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		A10000000000000000000011 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000010 /* App.xcconfig */,
+				A10000000000000000000012 /* Info.plist */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		A10000000000000000000005 /* Products */ = {
@@ -173,6 +185,7 @@
 		};
 		A1000000000000000000000E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A10000000000000000000010 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -180,6 +193,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Action;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Speak your answer instead of typing it.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Turns what you say into text, on your device.";
@@ -202,6 +216,7 @@
 		};
 		A1000000000000000000000F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A10000000000000000000010 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -209,6 +224,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Action;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Speak your answer instead of typing it.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Turns what you say into text, on your device.";

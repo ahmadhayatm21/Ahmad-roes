@@ -9,6 +9,8 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
+      - name: Add a test backend config
+        run: printf 'BACKEND_HOST = ci.example.com\n' > ios/Config/Secrets.xcconfig
       - name: Build for iOS Simulator
         run: |
           xcodebuild -version
@@ -27,6 +29,10 @@ jobs:
           APP=build/Build/Products/Debug-iphonesimulator/ActionApp.app
           test -d "$APP"
           grep -rqa "What do you want to achieve?" "$APP"
+      - name: Check the backend host reaches Info.plist
+        run: |
+          HOST=$(plutil -extract ActionBackendHost raw build/Build/Products/Debug-iphonesimulator/ActionApp.app/Info.plist)
+          test "$HOST" = "ci.example.com"
 
   backend:
     runs-on: ubuntu-latest
