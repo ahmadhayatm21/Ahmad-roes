@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ios:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build for iOS Simulator
+        run: |
+          xcodebuild -version
+          xcodebuild \
+            -project ios/ActionApp.xcodeproj \
+            -scheme ActionApp \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            -quiet \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+      - name: Check the app binary contains the app code
+        run: |
+          # Debug builds keep the code in ActionApp.debug.dylib, so search the whole bundle.
+          APP=build/Build/Products/Debug-iphonesimulator/ActionApp.app
+          test -d "$APP"
+          grep -rqa "What do you want to achieve?" "$APP"
+
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
