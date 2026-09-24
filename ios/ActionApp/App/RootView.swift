@@ -28,6 +28,8 @@ struct RootView: View {
             StartFlowView()
         case .plan(let mission):
             GamePlanView(mission: mission)
+        case .walk:
+            Text("Walk-through")
         }
     }
 }

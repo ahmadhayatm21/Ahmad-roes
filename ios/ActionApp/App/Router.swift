@@ -4,6 +4,7 @@ import SwiftUI
 enum Route: Hashable {
     case start
     case plan(Mission)
+    case walk(Mission, RoutineItem?)
 }
 
 @Observable
