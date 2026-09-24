@@ -34,8 +34,10 @@ struct WalkThroughView: View {
         }
         .padding(20)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(mission.plan.title)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                InMyHeadButton { sheet = .inMyHead }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button { sheet = .script } label: {
@@ -55,6 +57,8 @@ struct WalkThroughView: View {
                 ObjectionView(context: mission.context, stepTitle: mission.step?.title)
             case .script:
                 ScriptView(context: mission.context, plan: mission.plan)
+            case .inMyHead:
+                InMyHeadView(task: routineItem?.title ?? mission.plan.title, step: mission.step?.title) {}
             }
         }
     }

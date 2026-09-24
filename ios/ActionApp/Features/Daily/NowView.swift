@@ -5,6 +5,7 @@ struct NowView: View {
     let mission: Mission
 
     @Environment(Router.self) private var router
+    @State private var showInMyHead = false
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 60)) { timeline in
@@ -67,6 +68,15 @@ struct NowView: View {
                     Image(systemName: "line.3.horizontal")
                 }
                 .accessibilityLabel("Menu")
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                InMyHeadButton { showInMyHead = true }
+            }
+        }
+        .sheet(isPresented: $showInMyHead) {
+            let item = DailyPlanner.current(in: mission.routine, at: .now)
+            InMyHeadView(task: item?.title ?? mission.plan.title, step: mission.step?.title) {
+                router.push(.walk(mission, item))
             }
         }
     }
