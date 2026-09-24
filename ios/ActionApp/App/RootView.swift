@@ -30,6 +30,8 @@ struct RootView: View {
             GamePlanView(mission: mission)
         case .walk(let mission, let item):
             WalkThroughView(mission: mission, routineItem: item)
+        case .practice(let mission):
+            PracticeView(context: mission.context)
         }
     }
 }

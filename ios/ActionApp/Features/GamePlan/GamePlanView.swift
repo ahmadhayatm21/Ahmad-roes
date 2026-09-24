@@ -5,6 +5,7 @@ struct GamePlanView: View {
     let mission: Mission
 
     @Environment(Router.self) private var router
+    @State private var showScript = false
 
     var body: some View {
         let plan = mission.plan
@@ -23,6 +24,16 @@ struct GamePlanView: View {
                 QuoteCard(label: "Open with", text: plan.opener)
 
                 PlanStructureList(steps: plan.steps)
+
+                HStack(spacing: 10) {
+                    Button { router.push(.practice(mission)) } label: {
+                        Label("Practice objections", systemImage: "figure.boxing")
+                    }
+                    Button { showScript = true } label: {
+                        Label("Full script", systemImage: "doc.text")
+                    }
+                }
+                .buttonStyle(.quiet)
             }
             .padding(20)
         }
@@ -36,6 +47,9 @@ struct GamePlanView: View {
             .background(.bar)
         }
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showScript) {
+            ScriptView(context: mission.context, plan: plan)
+        }
     }
 }
 

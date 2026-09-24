@@ -5,11 +5,20 @@ struct StepToolsBar: View {
     let onSelect: (WalkSheet) -> Void
 
     var body: some View {
-        HStack(spacing: 10) {
-            Button { onSelect(.sayIt) } label: {
-                Label("How do I say this?", systemImage: "text.bubble")
-            }
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) { buttons }
+            VStack(alignment: .leading, spacing: 10) { buttons }
         }
         .buttonStyle(.quiet)
+    }
+
+    @ViewBuilder
+    private var buttons: some View {
+        Button { onSelect(.sayIt) } label: {
+            Label("How do I say this?", systemImage: "text.bubble")
+        }
+        Button { onSelect(.objection) } label: {
+            Label("I got an objection", systemImage: "hand.raised")
+        }
     }
 }

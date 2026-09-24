@@ -34,10 +34,26 @@ struct WalkThroughView: View {
         .padding(20)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(mission.plan.title)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button { sheet = .script } label: {
+                        Label("Full script", systemImage: "doc.text")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+                .accessibilityLabel("More")
+            }
+        }
         .sheet(item: $sheet) { sheet in
             switch sheet {
             case .sayIt:
                 SayItView(context: mission.context, stepTitle: mission.step?.title)
+            case .objection:
+                ObjectionView(context: mission.context, stepTitle: mission.step?.title)
+            case .script:
+                ScriptView(context: mission.context, plan: mission.plan)
             }
         }
     }
