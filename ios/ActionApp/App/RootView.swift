@@ -11,7 +11,7 @@ struct RootView: View {
         NavigationStack(path: $router.path) {
             Group {
                 if let mission = missions.first {
-                    GamePlanView(mission: mission)
+                    NowView(mission: mission)
                 } else {
                     StartFlowView()
                 }
