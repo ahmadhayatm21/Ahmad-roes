@@ -32,6 +32,8 @@ struct RootView: View {
             WalkThroughView(mission: mission, routineItem: item)
         case .practice(let mission):
             PracticeView(context: mission.context)
+        case .feedback(let mission, let item):
+            FeedbackView(mission: mission, routineItem: item)
         }
     }
 }

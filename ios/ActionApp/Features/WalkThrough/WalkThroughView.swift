@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// Shows one step at a time. The user does it in real life, taps NEXT, and the next step unlocks.
+/// DONE on the last step asks "What happened?".
 struct WalkThroughView: View {
     let mission: Mission
     /// The routine block this run belongs to, if started from the NOW screen.
@@ -60,9 +61,7 @@ struct WalkThroughView: View {
 
     private func advance(isLast: Bool) {
         if isLast {
-            mission.currentStep = 0
-            routineItem?.lastDoneAt = .now
-            router.popToRoot()
+            router.push(.feedback(mission, routineItem))
         } else {
             withAnimation(.snappy) { mission.currentStep += 1 }
         }

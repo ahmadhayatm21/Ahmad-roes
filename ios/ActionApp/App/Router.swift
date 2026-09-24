@@ -6,6 +6,7 @@ enum Route: Hashable {
     case plan(Mission)
     case walk(Mission, RoutineItem?)
     case practice(Mission)
+    case feedback(Mission, RoutineItem?)
 }
 
 @Observable
