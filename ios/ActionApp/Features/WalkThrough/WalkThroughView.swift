@@ -7,6 +7,7 @@ struct WalkThroughView: View {
     let routineItem: RoutineItem?
 
     @Environment(Router.self) private var router
+    @State private var sheet: WalkSheet?
 
     var body: some View {
         let steps = mission.plan.steps
@@ -24,6 +25,8 @@ struct WalkThroughView: View {
 
             Spacer()
 
+            StepToolsBar { sheet = $0 }
+
             PrimaryButton(isLast ? "DONE" : "NEXT") {
                 advance(isLast: isLast)
             }
@@ -31,6 +34,12 @@ struct WalkThroughView: View {
         .padding(20)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(mission.plan.title)
+        .sheet(item: $sheet) { sheet in
+            switch sheet {
+            case .sayIt:
+                SayItView(context: mission.context, stepTitle: mission.step?.title)
+            }
+        }
     }
 
     private func advance(isLast: Bool) {
