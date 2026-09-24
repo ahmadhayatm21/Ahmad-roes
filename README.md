@@ -45,7 +45,7 @@ Or open `ios/ActionApp.xcodeproj` in Xcode 16+ and run.
 
 **Sample data.** With no backend configured, the app uses `SampleCoachService`, which has realistic plans for sales calls, door-to-door and general goals, plus objections and lines. Every screen works offline.
 
-**Connect the backend.** Set `AppConfig.backendURL` (and `appToken` if you set `APP_TOKEN` on the server) in `ios/ActionApp/Services/AppConfig.swift`. If the backend fails, the app falls back to sample answers so the user is never stuck.
+**Connect the backend.** Copy `ios/Config/Secrets.example.xcconfig` to `ios/Config/Secrets.xcconfig` and set `BACKEND_HOST` to your Vercel host (no `https://`), plus `APP_TOKEN` if you set one on the server. `Secrets.xcconfig` is git-ignored, so the values stay off GitHub. Rebuild the app. With no host set, the app runs on sample data. If the backend fails, the app falls back to sample answers so the user is never stuck.
 
 **Live coach later.** `SpeechTranscriber` returns a stream of partial transcripts. A future live microphone coach can consume that same stream and call the coach service while the user talks.
 
@@ -69,6 +69,14 @@ npm run dev
 ```
 
 Deploy to Vercel with `backend` as the root directory, and set `ANTHROPIC_API_KEY` (and optionally `APP_TOKEN`) in the project's environment variables. The API key never goes in the app.
+
+Check a deployment:
+
+```sh
+curl -X POST https://your-project.vercel.app/api/say-it \
+  -H 'content-type: application/json' \
+  -d '{"intent":"tell them the price is fair","context":{"goal":"Close 3 clients","avoiding":"Calling","mustDo":"Call 20 gyms"}}'
+```
 
 The backend uses `claude-opus-5` with low effort for fast, short answers, and server-side refusal fallbacks (`fallbacks: "default"`). Override the model with `CLAUDE_MODEL`.
 

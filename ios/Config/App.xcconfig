@@ -1,0 +1,9 @@
+// Backend settings. Put real values in Secrets.xcconfig (git-ignored), not here.
+// Copy Secrets.example.xcconfig to Secrets.xcconfig and fill it in.
+
+// Host only, without https:// (xcconfig treats // as a comment). Empty = local sample data.
+BACKEND_HOST =
+// Must match the backend's APP_TOKEN. Empty when the backend has none.
+APP_TOKEN =
+
+#include? "Secrets.xcconfig"
