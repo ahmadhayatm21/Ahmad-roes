@@ -38,10 +38,27 @@ final class Mission {
         set { planData = (try? JSONEncoder().encode(newValue)) ?? planData }
     }
 
+    /// `currentStep` clamped to the plan.
+    var stepIndex: Int {
+        min(max(currentStep, 0), max(plan.steps.count - 1, 0))
+    }
+
     /// The current step, clamped to the plan.
     var step: PlanStep? {
         let steps = plan.steps
         guard !steps.isEmpty else { return nil }
-        return steps[min(max(currentStep, 0), steps.count - 1)]
+        return steps[stepIndex]
+    }
+
+    /// The step after the current one. Nil on the last step.
+    var nextStep: PlanStep? {
+        let steps = plan.steps
+        let next = stepIndex + 1
+        return next < steps.count ? steps[next] : nil
+    }
+
+    /// Rounds the user reported as done. Shown as progress toward the goal.
+    var wins: Int {
+        reports.filter { $0.outcome == .did }.count
     }
 }
