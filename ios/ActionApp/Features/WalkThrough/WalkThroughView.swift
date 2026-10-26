@@ -16,11 +16,6 @@ struct WalkThroughView: View {
         let isLast = index >= steps.count - 1
 
         VStack(alignment: .leading, spacing: 24) {
-            Label(mission.goal, systemImage: "scope")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-
             StepProgressView(current: index, total: steps.count)
 
             if let step = mission.step {
@@ -30,10 +25,6 @@ struct WalkThroughView: View {
             }
 
             Spacer()
-
-            Text(mission.nextStep.map { "Up next: \($0.title)" } ?? "Last step. Finish it and you're done.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
 
             StepToolsBar { sheet = $0 }
 

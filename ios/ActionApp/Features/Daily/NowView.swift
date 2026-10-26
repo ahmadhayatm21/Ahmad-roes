@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Opening the app shows the goal, what to do now and the next step toward it. One thing, one button.
+/// Opening the app shows what to do now. One thing, one button.
 struct NowView: View {
     let mission: Mission
 
@@ -13,8 +13,6 @@ struct NowView: View {
             let then = item.flatMap { DailyPlanner.upcoming(after: $0, in: mission.routine, at: timeline.date) }
 
             VStack(alignment: .leading, spacing: 16) {
-                GoalHeader(goal: mission.goal, wins: mission.wins)
-
                 Text("Now")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
@@ -35,12 +33,9 @@ struct NowView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                if let step = mission.step {
-                    NextStepCard(
-                        step: step,
-                        number: mission.stepIndex + 1,
-                        total: mission.plan.steps.count
-                    )
+                if let step = mission.step, mission.currentStep > 0 {
+                    Label("You're on: \(step.title)", systemImage: "arrow.turn.down.right")
+                        .font(.subheadline)
                 }
 
                 Spacer()
