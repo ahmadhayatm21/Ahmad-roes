@@ -10,24 +10,8 @@ struct RemoteCoachService: CoachService {
         case badStatus(Int)
     }
 
-    func gamePlan(_ request: GamePlanRequest) async throws -> GamePlan {
-        try await post("api/game-plan", request)
-    }
-
-    func sayIt(_ request: SayItRequest) async throws -> SayItResponse {
-        try await post("api/say-it", request)
-    }
-
-    func objection(_ request: ObjectionRequest) async throws -> ObjectionResponse {
-        try await post("api/objection", request)
-    }
-
-    func practice(_ request: PracticeRequest) async throws -> PracticeResponse {
-        try await post("api/practice", request)
-    }
-
-    func script(_ request: ScriptRequest) async throws -> ScriptResponse {
-        try await post("api/script", request)
+    func nextStep(_ request: StepRequest) async throws -> StepResponse {
+        try await post("api/next-step", request)
     }
 
     private func post<Body: Encodable, Response: Decodable>(_ path: String, _ body: Body) async throws -> Response {

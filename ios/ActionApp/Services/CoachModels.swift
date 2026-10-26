@@ -2,70 +2,26 @@ import Foundation
 
 // Request and response bodies for the backend. Field names match the JSON exactly.
 
-struct FeedbackEntry: Codable, Hashable {
+enum StepEvent: String, Codable {
+    /// The first step, right after the user describes their picture.
+    case start
+    /// The current step is done.
+    case done
+    /// The current step is too big. Split it.
+    case tooBig
+    /// The user said something new. The last picture entry is the newest.
+    case thought
+}
+
+struct StepRequest: Codable {
+    var picture: [String]
+    var done: [String]
+    var current: String?
+    var event: StepEvent
+    /// Optional one word after Done, e.g. "scared", "easy", "rejected".
+    var said: String?
+}
+
+struct StepResponse: Codable, Hashable {
     var step: String
-    var whatHappened: String
-    var outcome: Outcome
-}
-
-struct GamePlanRequest: Codable {
-    var goal: String
-    var avoiding: String
-    var mustDo: String
-    var feedback: [FeedbackEntry]
-
-    init(context: MissionContext, feedback: [FeedbackEntry] = []) {
-        goal = context.goal
-        avoiding = context.avoiding
-        mustDo = context.mustDo
-        self.feedback = feedback
-    }
-
-    var context: MissionContext { MissionContext(goal: goal, avoiding: avoiding, mustDo: mustDo) }
-}
-
-struct SayItRequest: Codable {
-    var intent: String
-    var context: MissionContext
-    var step: String?
-}
-
-struct SayItResponse: Codable, Hashable {
-    var line: String
-}
-
-struct ObjectionRequest: Codable {
-    var objection: String
-    var context: MissionContext
-    var step: String?
-}
-
-struct ObjectionResponse: Codable, Hashable {
-    var answer: String
-}
-
-struct PracticeRequest: Codable {
-    var context: MissionContext
-    var objection: String?
-    var reply: String?
-}
-
-struct PracticeResponse: Codable, Hashable {
-    /// A stronger way to say the user's reply. Empty on the first round.
-    var better: String
-    var nextObjection: String
-}
-
-struct ScriptRequest: Codable {
-    var context: MissionContext
-    var plan: GamePlan
-}
-
-struct ScriptResponse: Codable, Hashable {
-    var sections: [ScriptSection]
-}
-
-struct ScriptSection: Codable, Hashable {
-    var title: String
-    var lines: [String]
 }

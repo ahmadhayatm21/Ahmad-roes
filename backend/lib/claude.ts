@@ -7,7 +7,7 @@ const client = new Anthropic();
 const MODEL = process.env.CLAUDE_MODEL ?? "claude-opus-5";
 
 // Shared voice for every endpoint. Short, calm, direct, human.
-const VOICE = `You are a calm friend standing next to someone who is about to do the thing they have been avoiding.
+const VOICE = `You are a calm friend standing next to someone who has the whole process in their head and has not taken the first step.
 Rules:
 - No theory. Never teach or explain. Give only what they need for the next move.
 - Short, plain, human sentences. Like a friend saying "press the bell."

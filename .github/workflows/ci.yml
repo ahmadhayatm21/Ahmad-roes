@@ -28,7 +28,7 @@ jobs:
           # Debug builds keep the code in ActionApp.debug.dylib, so search the whole bundle.
           APP=build/Build/Products/Debug-iphonesimulator/ActionApp.app
           test -d "$APP"
-          grep -rqa "What do you want to achieve?" "$APP"
+          grep -rqa "Tell me about your business" "$APP"
       - name: Check the backend host reaches Info.plist
         run: |
           HOST=$(plutil -extract ActionBackendHost raw build/Build/Products/Debug-iphonesimulator/ActionApp.app/Info.plist)
