@@ -73,7 +73,15 @@ npm install
 npm run dev
 ```
 
-Deploy to Vercel with `backend` as the root directory, and set `ANTHROPIC_API_KEY` (and optionally `APP_TOKEN`) in the project's environment variables. The API key never goes in the app.
+**Deploy from GitHub.** `.github/workflows/deploy-backend.yml` deploys `backend/` to Vercel production (project `action-backend`) on every push to `main` that touches it, or by hand from the Actions tab. Add these repo secrets under Settings → Secrets and variables → Actions:
+
+- `VERCEL_TOKEN`: from vercel.com/account/tokens. Until it's set, the workflow skips.
+- `ANTHROPIC_API_KEY`: your Claude API key.
+- `APP_TOKEN` (optional): if set, the app must send the same value.
+
+After a deploy, the run's summary shows the host to put in `BACKEND_HOST` and a first step from the live backend.
+
+Or deploy by hand on Vercel with `backend` as the root directory, and set `ANTHROPIC_API_KEY` (and optionally `APP_TOKEN`) in the project's environment variables. Either way, the API key never goes in the app.
 
 Check a deployment:
 

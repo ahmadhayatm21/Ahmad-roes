@@ -1,0 +1,86 @@
+name: Deploy backend
+
+# Deploys backend/ to Vercel production on every push to main that touches it.
+# Needs repo secrets VERCEL_TOKEN and ANTHROPIC_API_KEY (APP_TOKEN is optional).
+# Skips quietly until VERCEL_TOKEN is set.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - backend/**
+      - .github/workflows/deploy-backend.yml
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      APP_TOKEN: ${{ secrets.APP_TOKEN }}
+      VERCEL_PROJECT: action-backend
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Skip until VERCEL_TOKEN is set
+        if: env.VERCEL_TOKEN == ''
+        run: echo "::notice::Add the VERCEL_TOKEN repo secret to deploy the backend."
+
+      - name: Check ANTHROPIC_API_KEY is set
+        if: env.VERCEL_TOKEN != '' && env.ANTHROPIC_API_KEY == ''
+        run: |
+          echo "::error::Add the ANTHROPIC_API_KEY repo secret. The backend can't make steps without it."
+          exit 1
+
+      - uses: actions/setup-node@v5
+        if: env.VERCEL_TOKEN != ''
+        with:
+          node-version: 22
+
+      - name: Link the Vercel project
+        if: env.VERCEL_TOKEN != ''
+        run: npx --yes vercel@latest link --yes --project "$VERCEL_PROJECT" --token "$VERCEL_TOKEN"
+
+      - name: Deploy to production
+        if: env.VERCEL_TOKEN != ''
+        run: |
+          args=(--prod --yes --token "$VERCEL_TOKEN" --env "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY")
+          if [ -n "$APP_TOKEN" ]; then
+            args+=(--env "APP_TOKEN=$APP_TOKEN")
+          fi
+          url=$(npx --yes vercel@latest deploy "${args[@]}")
+          echo "URL=$url" >> "$GITHUB_ENV"
+
+      # The unique deployment URL sits behind Vercel's login; the production alias is public.
+      # The shortest *.vercel.app alias is the production one, e.g. action-backend.vercel.app.
+      - name: Find the production host
+        if: env.VERCEL_TOKEN != ''
+        run: |
+          host=$(npx --yes vercel@latest inspect "$URL" --token "$VERCEL_TOKEN" 2>&1 \
+            | grep -oE '[a-z0-9-]+\.vercel\.app' | sort -u | awk '{ print length, $0 }' | sort -n | head -1 | cut -d' ' -f2)
+          test -n "$host"
+          echo "HOST=$host" >> "$GITHUB_ENV"
+
+      - name: Check the deployment gives a step
+        if: env.VERCEL_TOKEN != ''
+        run: |
+          body=$(curl -sS --fail-with-body -X POST "https://$HOST/api/next-step" \
+            -H 'content-type: application/json' \
+            -H "x-app-token: $APP_TOKEN" \
+            -d '{"picture":["I sell booking software to local gyms. I see owners calling me first."],"event":"start"}')
+          echo "$body"
+          echo "$body" | grep -q '"step"'
+          {
+            echo "### Backend deployed"
+            echo "Set \`BACKEND_HOST = $HOST\` in ios/Config/Secrets.xcconfig."
+            echo
+            echo "First step from the live backend: $body"
+          } >> "$GITHUB_STEP_SUMMARY"
